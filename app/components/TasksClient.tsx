@@ -1,30 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import AddTask from "./AddTask";
+import TaskCard from "./TaskCard";
 
-export default function TaskClient({initialTasks}) {
-  const [tasks, setTasks] = useState(initialTasks);
-
+export default function TasksClient({ tasks }) {
   return (
-    <div>
-      <AddTask
-        onAdd={(title) => 
-          setTasks([...tasks, {id: tasks.length + 1, title}])
-        }
-      />
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-4">Tasks</h1>
 
-      <div className="space-y-2">
-        {tasks.map((task) => (
-          <div
-            key={task.id}
-            className="p-3 rounded border border-gray-300"
-          >
-            {task.title}
-        
-          </div>
+      <div className="grid gap-4">
+        {tasks.map(task => (
+          <TaskCard key={task.id} task={task} />
         ))}
-
       </div>
     </div>
   );

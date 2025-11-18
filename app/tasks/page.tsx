@@ -1,5 +1,6 @@
-import AddTask from "../components/AddTask";
-import TaskClient from "../components/TasksClient";
+
+import { prisma } from "@/lib/db";
+import TasksClient from "../components/TasksClient";
 
 
 
@@ -9,22 +10,19 @@ import TaskClient from "../components/TasksClient";
 
 
 async function getTasks()  {
-  await new Promise((res) => setTimeout(res,1000));
-  return [
-    {id: 1, title: "Learn Next.js"},
-    {id: 2, title: "Build TaskBaord"},
-    {id: 3, title: "Practice daily"}
-  ];
+  const res = await fetch("http://localhost:3000/tasks/api/tasks", {
+    cache: "no-store",
+  });
+  return res.json();
 }
 
 
 export default async function TasksPage() {
-  const tasks = await getTasks();
+  const tasks = await prisma.task.findMany();
   return (
-    <main className="p-6 text-xl space-y-2">
-      <h1 className="text-2xl font-bold mb-4">Tasks</h1>
-
-      <TaskClient initialTasks={tasks}/>
-    </main>
+    <div>
+      <h1 className="text-2xl font-bold mb-4">All Tasks</h1>
+      <TasksClient tasks={tasks}/>
+    </div>
   );
 }

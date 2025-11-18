@@ -1,10 +1,20 @@
 "use server";
 
-export async function addTaskToServer(title: string) {
-  console.log("Server received:", title);
+import {prisma} from "@/lib/db";
+import {revalidatePath} from "next/cache";
 
-  await new Promise((res) => setTimeout(res,300));
+export async function createTask(formData: FormData) {
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
 
-  return {success: true};
   
-}
+  await prisma.task.create({
+    data: {
+      title,
+      description,
+    },
+  });
+  
+  revalidatePath("/tasks");
+} 
+
