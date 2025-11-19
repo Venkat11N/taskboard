@@ -1,45 +1,45 @@
 import { prisma } from "@/lib/db";
+import { updateTask } from "../../actions";
 
-
-
-export default async function EditTaskPage ({params}: any) {
+export default async function EditTaskPage({ params }: any) {
   const { id } = await params;
+  const taskId = Number(id);
 
   const task = await prisma.task.findUnique({
-    where: {id: Number(id)},
+    where: { id: taskId },
   });
 
   if (!task) return <div>Task not found</div>;
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Edit Task</h2>
+    <form action={updateTask} className="flex flex-col gap-3 p-6">
+      <input type="hidden" name="id" value={task.id} />
 
-      <form action={updateTask} className="space-y-4">
-        <input type="hidden" name="id" value={task.id}/>
+      <input
+        name="title"
+        defaultValue={task.title}
+        className="border p-2"
+      />
 
-        <input
-          name="title"
-          defaultValue={task.title}
-          className="border p-2 w-full"
-        />
+      <textarea
+        name="description"
+        defaultValue={task.description || ""}
+        className="border p-2"
+      />
 
-        <textarea
-          name="description"
-          defaultValue={task.description || ""}
-          className="border p-2 w-full"
-        />
+      <select
+        name="status"
+        defaultValue={task.status}
+        className="border p-2"
+      >
+        <option value="pending">Pending</option>
+        <option value="in-progress">In Progress</option>
+        <option value="completed">Completed</option>
+      </select>
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-3 py-2 rounded"
-        >
-          Update
-        </button>
-      </form>
-
-    </div>
-  )
-
-
+      <button type="submit" className="bg-blue-500 text-white p-2">
+        Update Task
+      </button>
+    </form>
+  );
 }

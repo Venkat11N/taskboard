@@ -29,6 +29,13 @@ export default function CreateTaskPage() {
           className="border p-2 w-full"
         />
 
+        <select name="status" defaultValue={task.status} className="border p-2">
+          <option value="todo">Todo</option>
+          <option value="in-progress">In Progress</option>
+          <option value="done">Done</option>
+        </select>
+
+
         <button
           type="submit"
           className="bg-blue-600 text-white px-3 py-2 rounded"
